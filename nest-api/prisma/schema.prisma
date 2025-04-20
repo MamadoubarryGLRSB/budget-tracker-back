@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String       @id @default(uuid())
+  email       String       @unique
+  password    String
+  firstName   String?      @map("first_name")
+  lastName    String?      @map("last_name")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  accounts    Account[]
+  categories  Category[]
+  transactions Transaction[] // Relation directe avec Transaction
+
+  @@map("users")
+}
+
+model Account {
+  id          String       @id @default(uuid())
+  userId      String       @map("user_id")
+  name        String
+  type        String
+  balance     Decimal      @db.Decimal(15, 2)
+  currency    String
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@map("accounts")
+}
+
+model Category {
+  id          String       @id @default(uuid())
+  userId      String       @map("user_id")
+  name        String
+  type        String
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@map("categories")
+}
+
+model Transaction {
+  id          String      @id @default(uuid())
+  accountId   String      @map("account_id")
+  categoryId  String      @map("category_id")
+  userId      String      @map("user_id")
+  date        DateTime
+  description String?
+  amount      Decimal     @db.Decimal(15, 2)
+  type        String
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  account     Account     @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category    Category    @relation(fields: [categoryId], references: [id])
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade) 
+
+  @@map("transactions")
+}
