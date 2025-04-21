@@ -1,19 +1,42 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { INestApplication } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app: INestApplication = await NestFactory.create(AppModule);
+
+  // Permettre CORS si nécessaire
+  app.enableCors();
 
   const config = new DocumentBuilder()
     .setTitle('Budget Tracker API')
     .setDescription('The Budget Tracker API description')
-    .setDescription('The Median API description')
     .setVersion('0.1')
+    // Assurez-vous que le nom correspond exactement à celui utilisé dans vos contrôleurs
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'access-token', // Ce nom doit correspondre à celui utilisé dans @ApiBearerAuth()
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+
+  // Options supplémentaires pour SwaggerUI
+  const customOptions = {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  };
+
+  SwaggerModule.setup('api', app, document, customOptions);
 
   await app.listen(3000);
 }

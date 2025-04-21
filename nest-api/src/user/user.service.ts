@@ -171,4 +171,15 @@ export class UserService {
       throw new InternalServerErrorException('Failed to update user');
     }
   }
+
+  async findByEmail(email: string) {
+    try {
+      return await this.prisma.user.findUnique({
+        where: { email },
+      });
+    } catch (error) {
+      console.error('Error finding user by email', error);
+      throw new InternalServerErrorException('Failed to find user');
+    }
+  }
 }

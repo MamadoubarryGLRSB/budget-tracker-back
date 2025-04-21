@@ -7,12 +7,15 @@ import {
   NotFoundException,
   Delete,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 import { CreateUserDto } from './dto/user.dto';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 
 @ApiTags('users')
 @Controller('users')
@@ -62,6 +65,7 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   @ApiOperation({ summary: 'Update user profile' })
   @ApiResponse({ status: 200, description: 'User successfully updated' })
@@ -78,5 +82,11 @@ export class UserController {
     }
 
     return updatedUser;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@CurrentUser() user) {
+    return user;
   }
 }
