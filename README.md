@@ -1,4 +1,3 @@
-
 # 💰 Budget Tracker – API Backend
 
 Bienvenue dans le backend de **Budget Tracker**, une API NestJS pour la gestion de budgets personnels.  
@@ -12,7 +11,7 @@ Assure-toi d’avoir ces outils installés :
 
 - **Docker & Docker Compose** → [Installation](https://docs.docker.com/get-docker/)
 - **Git** → [Installation](https://git-scm.com/downloads)
-- **PgAdmin** *(optionnel, pour visualiser la base de données)*
+- **PgAdmin** _(optionnel, pour visualiser la base de données)_
 - Un fichier `.env` basé sur `env.example`
 
 ---
@@ -36,6 +35,8 @@ cp .env.example .env
 
 ```bash
 docker compose up
+
+npm run dev
 ```
 
 L’API sera accessible à l’adresse :  
@@ -70,4 +71,3 @@ Mot de passe : password123
 
 Tu peux explorer tous les endpoints à l’aide de Swagger ici :  
 👉 **http://localhost:3000/api**
-
