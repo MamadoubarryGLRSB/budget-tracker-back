@@ -30,6 +30,12 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@CurrentUser() user) {
+    return user;
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get user profile' })
   @ApiResponse({ status: 200, description: 'Return the user profile' })
@@ -82,11 +88,5 @@ export class UserController {
     }
 
     return updatedUser;
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@CurrentUser() user) {
-    return user;
   }
 }
