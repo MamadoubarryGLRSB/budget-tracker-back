@@ -31,9 +31,12 @@ export class AuthService {
 
     const payload = { email: user.email, sub: user.id };
 
+    // Définir l'expiration du token en fonction du paramètre remember
+    const expiresIn = loginDto.remember ? '24h' : '8h';
+
     return {
       user,
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(payload, { expiresIn }),
     };
   }
 }
