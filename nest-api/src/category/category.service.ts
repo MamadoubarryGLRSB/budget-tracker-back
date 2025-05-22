@@ -23,7 +23,6 @@ export class CategoryService {
         data: {
           userId,
           name: createCategoryDto.name,
-          type: createCategoryDto.type,
         },
       });
 
@@ -93,7 +92,6 @@ export class CategoryService {
         where: { id },
         data: {
           ...(updateCategoryDto.name && { name: updateCategoryDto.name }),
-          ...(updateCategoryDto.type && { type: updateCategoryDto.type }),
         },
       });
 

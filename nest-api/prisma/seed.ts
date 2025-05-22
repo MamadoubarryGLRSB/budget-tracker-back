@@ -74,35 +74,30 @@ async function main() {
       data: {
         userId: user1.id,
         name: 'Alimentation',
-        type: 'expense',
       },
     }),
     prisma.category.create({
       data: {
         userId: user1.id,
         name: 'Transport',
-        type: 'expense',
       },
     }),
     prisma.category.create({
       data: {
         userId: user1.id,
         name: 'Salaire',
-        type: 'income',
       },
     }),
     prisma.category.create({
       data: {
         userId: user2.id,
         name: 'Loisirs',
-        type: 'expense',
       },
     }),
     prisma.category.create({
       data: {
         userId: user2.id,
         name: 'Freelance',
-        type: 'income',
       },
     }),
   ]);

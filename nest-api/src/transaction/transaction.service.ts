@@ -46,13 +46,6 @@ export class TransactionService {
         throw new ForbiddenException('Access to category denied');
       }
 
-      // Vérifier que le type de transaction correspond au type de catégorie
-      if (createTransactionDto.type !== category.type) {
-        throw new BadRequestException(
-          'Transaction type must match category type',
-        );
-      }
-
       // Calculer le nouveau solde du compte
       let newBalance: Prisma.Decimal;
       const transactionAmount = new Prisma.Decimal(createTransactionDto.amount);
@@ -247,15 +240,6 @@ export class TransactionService {
         }
 
         categoryToUpdate = updateTransactionDto.categoryId;
-
-        // Si le type de transaction n'est pas explicitement modifié, mais que la catégorie l'est
-        if (!updateTransactionDto.type) {
-          if (newCategory.type !== currentTransaction.type) {
-            throw new BadRequestException(
-              'Transaction type must match category type',
-            );
-          }
-        }
       }
 
       // Mise à jour du montant
@@ -266,17 +250,6 @@ export class TransactionService {
       // Mise à jour du type
       if (updateTransactionDto.type) {
         typeToUpdate = updateTransactionDto.type;
-
-        // Vérifier que le nouveau type correspond à la catégorie
-        const category = await this.prisma.category.findUnique({
-          where: { id: categoryToUpdate },
-        });
-
-        if (category && category.type !== typeToUpdate) {
-          throw new BadRequestException(
-            'Transaction type must match category type',
-          );
-        }
       }
 
       // Calculer les ajustements de solde pour les comptes
@@ -303,9 +276,7 @@ export class TransactionService {
             ...(updateTransactionDto.accountId && {
               accountId: updateTransactionDto.accountId,
             }),
-            ...(updateTransactionDto.categoryId && {
-              categoryId: updateTransactionDto.categoryId,
-            }),
+            categoryId: categoryToUpdate,
             ...(updateTransactionDto.date && {
               date: new Date(updateTransactionDto.date),
             }),

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsIn } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCategoryDto {
@@ -6,13 +6,4 @@ export class CreateCategoryDto {
   @IsString()
   @IsNotEmpty()
   name: string;
-
-  @ApiProperty({
-    example: 'expense',
-    description: 'Type de catégorie (income, expense)',
-  })
-  @IsString()
-  @IsNotEmpty()
-  @IsIn(['income', 'expense'])
-  type: string;
 }
