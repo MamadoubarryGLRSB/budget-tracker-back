@@ -18,6 +18,7 @@ model User {
   accounts     Account[]
   categories   Category[]
   transactions Transaction[]
+  destinataires Destinataire[]
 
   @@map("users")
 }
@@ -49,20 +50,34 @@ model Category {
   @@map("categories")
 }
 
+model Destinataire {
+  id           String        @id @default(uuid())
+  userId       String        @map("user_id")
+  name         String
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@map("destinataires")
+}
+
 model Transaction {
-  id          String   @id @default(uuid())
-  accountId   String   @map("account_id")
-  categoryId  String   @map("category_id")
-  userId      String   @map("user_id")
-  date        DateTime
-  description String?
-  amount      Decimal  @db.Decimal(15, 2)
-  type        String
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  account     Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  category    Category @relation(fields: [categoryId], references: [id])
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String        @id @default(uuid())
+  accountId      String        @map("account_id")
+  categoryId     String        @map("category_id")
+  userId         String        @map("user_id")
+  destinataireId String?       @map("destinataire_id")
+  date           DateTime
+  description    String?
+  amount         Decimal       @db.Decimal(15, 2)
+  type           String
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  account        Account       @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category       Category      @relation(fields: [categoryId], references: [id])
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  destinataire   Destinataire? @relation(fields: [destinataireId], references: [id])
 
   @@map("transactions")
 }

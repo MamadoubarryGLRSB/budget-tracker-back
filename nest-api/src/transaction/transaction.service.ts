@@ -46,6 +46,21 @@ export class TransactionService {
         throw new ForbiddenException('Access to category denied');
       }
 
+      // Vérifier le destinataire s'il est fourni
+      if (createTransactionDto.destinataireId) {
+        const destinataire = await this.prisma.destinataire.findUnique({
+          where: { id: createTransactionDto.destinataireId },
+        });
+
+        if (!destinataire) {
+          throw new NotFoundException('Destinataire not found');
+        }
+
+        if (destinataire.userId !== userId) {
+          throw new ForbiddenException('Access to destinataire denied');
+        }
+      }
+
       // Calculer le nouveau solde du compte
       let newBalance: Prisma.Decimal;
       const transactionAmount = new Prisma.Decimal(createTransactionDto.amount);
@@ -64,6 +79,7 @@ export class TransactionService {
             userId,
             accountId: createTransactionDto.accountId,
             categoryId: createTransactionDto.categoryId,
+            destinataireId: createTransactionDto.destinataireId,
             date: new Date(createTransactionDto.date),
             description: createTransactionDto.description,
             amount: transactionAmount,
@@ -115,6 +131,11 @@ export class TransactionService {
               name: true,
             },
           },
+          destinataire: {
+            select: {
+              name: true,
+            },
+          },
         },
       });
 
@@ -138,6 +159,11 @@ export class TransactionService {
             },
           },
           category: {
+            select: {
+              name: true,
+            },
+          },
+          destinataire: {
             select: {
               name: true,
             },
