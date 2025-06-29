@@ -46,18 +46,18 @@ export class TransactionService {
         throw new ForbiddenException('Access to category denied');
       }
 
-      // Vérifier le destinataire s'il est fourni
-      if (createTransactionDto.destinataireId) {
-        const destinataire = await this.prisma.destinataire.findUnique({
-          where: { id: createTransactionDto.destinataireId },
+      // Vérifier le recipient s'il est fourni
+      if (createTransactionDto.recipientId) {
+        const recipient = await this.prisma.recipient.findUnique({
+          where: { id: createTransactionDto.recipientId },
         });
 
-        if (!destinataire) {
-          throw new NotFoundException('Destinataire not found');
+        if (!recipient) {
+          throw new NotFoundException('Recipient not found');
         }
 
-        if (destinataire.userId !== userId) {
-          throw new ForbiddenException('Access to destinataire denied');
+        if (recipient.userId !== userId) {
+          throw new ForbiddenException('Access to recipient denied');
         }
       }
 
@@ -79,7 +79,7 @@ export class TransactionService {
             userId,
             accountId: createTransactionDto.accountId,
             categoryId: createTransactionDto.categoryId,
-            destinataireId: createTransactionDto.destinataireId,
+            recipientId: createTransactionDto.recipientId,
             date: new Date(createTransactionDto.date),
             description: createTransactionDto.description,
             amount: transactionAmount,
@@ -131,7 +131,7 @@ export class TransactionService {
               name: true,
             },
           },
-          destinataire: {
+          recipient: {
             select: {
               name: true,
             },
@@ -163,7 +163,7 @@ export class TransactionService {
               name: true,
             },
           },
-          destinataire: {
+          recipient: {
             select: {
               name: true,
             },

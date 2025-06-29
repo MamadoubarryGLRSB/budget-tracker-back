@@ -28,11 +28,11 @@ export class CreateTransactionDto {
 
   @ApiPropertyOptional({
     example: '123e4567-e89b-12d3-a456-426614174002',
-    description: 'ID du destinataire (optionnel)',
+    description: 'ID du recipient (optionnel)',
   })
   @IsUUID()
   @IsOptional()
-  destinataireId?: string;
+  recipientId?: string;
 
   @ApiProperty({
     example: '2023-04-15T00:00:00Z',
