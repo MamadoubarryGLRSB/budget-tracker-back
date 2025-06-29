@@ -120,17 +120,6 @@ export class TransactionService {
           date: 'desc',
         },
         include: {
-          account: {
-            select: {
-              name: true,
-              currency: true,
-            },
-          },
-          category: {
-            select: {
-              name: true,
-            },
-          },
           recipient: {
             select: {
               name: true,
@@ -152,17 +141,6 @@ export class TransactionService {
       const transaction = await this.prisma.transaction.findUnique({
         where: { id },
         include: {
-          account: {
-            select: {
-              name: true,
-              currency: true,
-            },
-          },
-          category: {
-            select: {
-              name: true,
-            },
-          },
           recipient: {
             select: {
               name: true,
