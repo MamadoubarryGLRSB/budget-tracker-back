@@ -59,7 +59,7 @@ model Recipient {
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions Transaction[]
 
-  @@map("destinataires")
+  @@map("recipients")
 }
 
 model Transaction {
@@ -67,7 +67,7 @@ model Transaction {
   accountId      String        @map("account_id")
   categoryId     String        @map("category_id")
   userId         String        @map("user_id")
-  recipientId    String?       @map("destinataire_id")
+  recipientId    String?       @map("recipient_id")
   date           DateTime
   description    String?
   amount         Decimal       @db.Decimal(15, 2)
