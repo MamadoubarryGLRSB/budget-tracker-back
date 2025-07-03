@@ -416,4 +416,56 @@ export class TransactionService {
       throw new InternalServerErrorException('Failed to delete transaction');
     }
   }
+
+  // Obtenir les années avec le total des transactions
+  async getTransactionsByYear(userId: string) {
+    try {
+      const transactions = await this.prisma.transaction.findMany({
+        where: {
+          userId,
+        },
+        select: {
+          date: true,
+          amount: true,
+        },
+        orderBy: {
+          date: 'desc',
+        },
+      });
+
+      // Grouper les transactions par année et calculer les totaux
+      const yearlyData = transactions.reduce((acc, transaction) => {
+        const year = transaction.date.getFullYear();
+
+        if (!acc[year]) {
+          acc[year] = {
+            year,
+            totalTransactions: 0,
+            totalAmount: new Prisma.Decimal(0),
+          };
+        }
+
+        acc[year].totalTransactions += 1;
+        acc[year].totalAmount = acc[year].totalAmount.add(transaction.amount);
+
+        return acc;
+      }, {});
+
+      // Convertir en tableau et trier par année décroissante
+      const result = Object.values(yearlyData)
+        .map((data: any) => ({
+          year: data.year,
+          totalTransactions: data.totalTransactions,
+          totalAmount: data.totalAmount.toString(), // Convertir Decimal en string
+        }))
+        .sort((a: any, b: any) => b.year - a.year);
+
+      return result;
+    } catch (error) {
+      console.error('Error getting transactions by year', error);
+      throw new InternalServerErrorException(
+        'Failed to get transactions by year',
+      );
+    }
+  }
 }

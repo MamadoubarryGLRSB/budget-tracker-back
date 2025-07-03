@@ -40,6 +40,18 @@ export class TransactionController {
     return this.transactionService.create(user.userId, createTransactionDto);
   }
 
+  @Get('years')
+  @ApiOperation({
+    summary: 'Get years with transaction totals for the current user',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Return years with transaction totals',
+  })
+  async getTransactionsByYear(@CurrentUser() user) {
+    return this.transactionService.getTransactionsByYear(user.userId);
+  }
+
   @Get()
   @ApiOperation({ summary: 'Get all transactions for the current user' })
   @ApiResponse({ status: 200, description: 'Return all transactions' })
