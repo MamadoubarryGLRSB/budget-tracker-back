@@ -1,13 +1,9 @@
 import { Injectable, InternalServerErrorException, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class StatisticsService {
-  private prisma: PrismaClient;
-
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
+  constructor(private prisma: PrismaService) {}
 
   // Obtenir les dépenses par catégorie pour une période donnée
   async getExpensesByCategory(userId: string, startDate: Date, endDate: Date) {

@@ -3,23 +3,14 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/user.dto';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
-  private prisma: PrismaClient;
-
-  constructor() {
-    try {
-      this.prisma = new PrismaClient();
-    } catch (error) {
-      console.error('Failed to initialize PrismaClient', error);
-      throw new InternalServerErrorException('Database connection error');
-    }
-  }
+  constructor(private prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
     try {

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { AccountModule } from './account/account.module';
@@ -14,6 +15,7 @@ import { RecipientModule } from './recipient/destinataire.module';
       isGlobal: true,
       envFilePath: ['.env'],
     }),
+    PrismaModule,
     UserModule,
     AuthModule,
     AccountModule,

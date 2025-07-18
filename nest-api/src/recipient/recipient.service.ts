@@ -1,15 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateRecipientDto } from './dto/create-destinataire.dto';
 import { UpdateRecipientDto } from './dto/update-destinataire.dto';
 
 @Injectable()
 export class RecipientService {
-  private prisma: PrismaClient;
-
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
+  constructor(private prisma: PrismaService) {}
 
   async create(userId: string, createRecipientDto: CreateRecipientDto) {
     return this.prisma.recipient.create({
